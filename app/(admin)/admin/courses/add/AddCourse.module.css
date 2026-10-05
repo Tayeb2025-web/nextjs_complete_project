@@ -1,0 +1,360 @@
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  direction: rtl;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.title::after {
+  content: "";
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 2px;
+  display: block;
+  margin: 0.8rem auto 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-weight: 600;
+  color: #334155;
+  font-size: 1rem;
+}
+
+.field input,
+.field textarea,
+.field select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+.checkboxField label {
+  display: flex;
+  gap: 10px;
+}
+
+.checkboxField input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+}
+
+.preview {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.thumbnail {
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+}
+
+/* بخش فصل‌ها و درس‌ها */
+.chaptersSection {
+  background-color: #f8fafc;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 2px dashed #cbd5e1;
+  margin-top: 2rem;
+}
+
+.chaptersTitle {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chapterItem {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.chapterItem.open {
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+  border: 2px solid #3b82f6;
+}
+
+.chapterHeader {
+  padding: 1.5rem;
+  background: #f1f5f9;
+  cursor: pointer;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s;
+}
+
+.chapterHeader:hover {
+  background: #e2e8f0;
+}
+
+.chapterTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.chapterIndex {
+  font-weight: bold;
+  color: #3b82f6;
+  font-size: 1.1rem;
+}
+
+.chapterTitleInput {
+  flex: 1;
+  padding: 0.8rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  background: white;
+}
+
+.chapterTitleInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.chapterActions {
+  display: flex;
+  align-items: normal;
+  gap: 1rem;
+}
+
+.lessonCount {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.removeChapterBtn {
+  background: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.removeChapterBtn:hover {
+  background: #dc2626;
+}
+
+.arrow {
+  font-size: 1.4rem;
+  color: #64748b;
+  transition: transform 0.3s;
+}
+
+.chapterItem.open .arrow {
+  transform: rotate(180deg);
+}
+
+.chapterContent {
+  padding: 1.5rem;
+  background: white;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    height: 0;
+  }
+  to {
+    opacity: 1;
+    height: auto;
+  }
+}
+
+.lessonItem {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+.lessonItem .rowOne {
+  display: flex;
+  justify-content: space-between;
+}
+
+.lessonItem:last-child {
+  border-bottom: none;
+}
+
+.lessonTitle {
+  padding: 0.8rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  width: 75%;
+  margin-left: 10px;
+}
+
+.lessonDuration {
+  padding: 0.8rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  width: 15%;
+}
+.freeLessonLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.lessonVideoUrl {
+  padding: 0.8rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.lessonVideoUrl:focus {
+  direction: ltr;
+}
+
+.removeLessonBtn {
+  background: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.addLessonBtn {
+  background: #10b981;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.addChapterBtn,
+.submitBtn {
+  background: #3b82f6;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.addChapterBtn:hover,
+.submitBtn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* استایل پیام موفقیت یا خطا */
+.message {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.message.success {
+  color: #28a745;
+}
+
+.message.error {
+  color: #dc3545;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lessonItem {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .chapterTitleWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chapterActions {
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: space-between;
+  }
+}

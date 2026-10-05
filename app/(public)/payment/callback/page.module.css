@@ -1,0 +1,115 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f7fb;
+  padding: 20px;
+}
+
+.card {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  border-radius: 20px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+  animation: fade 0.4s ease;
+  margin: 100px auto;
+  border: 1px dashed #959697;
+}
+
+.successIcon,
+.errorIcon {
+  width: 110px;
+  height: 110px;
+  margin: auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 58px;
+  color: #fff;
+  margin-bottom: 25px;
+}
+
+.successIcon {
+  background: #27ae60;
+}
+
+.errorIcon {
+  background: #e74c3c;
+}
+
+.card h1 {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #666;
+  line-height: 2;
+  margin-bottom: 30px;
+}
+
+.refBox {
+  background: #f7f7f7;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 30px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.refBox strong {
+  font-size: 20px;
+}
+
+.card button {
+  width: 100%;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-size: 16px;
+}
+
+.card button:hover {
+  background: #1d4ed8;
+}
+
+.loader {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 6px solid #ddd;
+  border-top-color: #2563eb;
+  margin: 0 auto 30px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

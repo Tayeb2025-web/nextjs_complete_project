@@ -1,0 +1,81 @@
+.courseCard {
+  width: 270px;
+  box-shadow: rgba(94, 129, 209, 0.16) 0px 8px 24px;
+  border-radius: 10px;
+  position: relative;
+}
+.courseImg img {
+  width: 100%;
+  border-radius: 10px 10px 20px 20px;
+}
+.courseDetails {
+  padding: 10px 15px;
+}
+.courseTitle h2 {
+  font-size: 18px;
+  height: 55px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.courseDesc {
+  color: rgb(55 65 81);
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2; /* تعداد خطوطی که می‌خوای نمایش داده بشه */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.courseFooter {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(128, 128, 128, 0.157);
+}
+.courseStudentCount {
+  display: flex;
+  gap: 7px;
+}
+.coursePrice {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.coursePrice span {
+  color: rgb(111, 111, 112);
+  margin-right: 5px;
+}
+.discount {
+  background-color: rgb(218 30 40);
+  color: white;
+  font-weight: 500;
+  padding: 0 8px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+.price {
+  font-weight: 600;
+}
+
+.discountPrice del {
+  color: rgba(111, 111, 112, 0.76);
+  font-size: 12px;
+}
+
+.discountPercent {
+  width: 45px;
+  height: 45px;
+  background-color: #ff1b47;
+  border-radius: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position:absolute;
+  top: -10px;
+  left: -10px;
+  color: white;
+}

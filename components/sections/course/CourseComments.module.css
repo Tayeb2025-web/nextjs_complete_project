@@ -1,0 +1,402 @@
+     .comments {
+  margin: 4rem 0;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  direction: rtl;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0 32px;
+}
+.title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #1e293b;
+  display: inline-block;
+}
+.addCommentBtn {
+  background: #e2852e;
+  color: white;
+  padding: 2px 15px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.commentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.commentItem {
+  background: #f8fafc;
+  padding: 1.8rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.user {
+  font-weight: 700;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e2e8f0;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.defaultAvatar {
+  width: 100%;
+  height: 100%;
+  background: #3b82f6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.userName {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 1.1rem;
+}
+
+.date {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.commentText {
+  color: #334155;
+  line-height: 1.8;
+  font-size: 16px;
+  margin: 0;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: #64748b;
+  font-size: 1.2rem;
+}
+
+/* فرم کامنت */
+.commentForm {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px dashed #e2e8f0;
+}
+
+.formTitle {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+}
+
+.textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  resize: vertical;
+  min-height: 150px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.cancelBtn,
+.submitBtn {
+  width: 130px;
+  background: #e2e8f0;
+  color: #334155;
+  padding: 0.9rem 2rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.cancelBtn:hover {
+  background: #cbd5e1;
+}
+.submitBtn {
+  background: #3b82f6;
+  color: white;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.message.success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.message.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.loginPrompt {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #fffbeb;
+  border: 2px dashed #f59e0b;
+  border-radius: 12px;
+  text-align: center;
+  color: #92400e;
+  font-size: 1.1rem;
+}
+
+.loginLink {
+  color: #3b82f6;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .comments {
+    padding: 1.5rem;
+  }
+
+  .commentHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .userInfo {
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* مودال */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalHeader {
+  padding: 1.5rem 2rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #1e293b;
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  color: #64748b;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalClose:hover {
+  color: #ef4444;
+}
+
+.modalForm {
+  padding: 2rem;
+}
+
+.modalTextarea {
+  width: 100%;
+  padding: 1.2rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  resize: vertical;
+  min-height: 180px;
+  font-family: inherit;
+}
+
+.modalTextarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal .submitBtn {
+  padding: 0.9rem 2rem;
+}
+
+.modalMessage {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.modalMessage.success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.modalMessage.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.loginPrompt {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: #fffbeb;
+  border: 2px dashed #f59e0b;
+  border-radius: 12px;
+  text-align: center;
+  color: #92400e;
+  font-size: 1.1rem;
+}
+
+.loginLink {
+  color: #3b82f6;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* پاسخ ادمین داخل باکس اصلی */
+.adminReply {
+  background: #e2852e14;
+  border: 1px solid #e2852ea3;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+}
+
+.replyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.adminBadge {
+  background: #ea8933;
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.replyText {
+  margin: 0;
+  color: #581c87;
+  line-height: 1.7;
+  font-size: 1.05rem;
+}

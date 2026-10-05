@@ -1,0 +1,17 @@
+
+.userLayout {
+    display: flex;
+}
+
+.sidebarContainer{
+    width: 300px;
+    height: 100vh;
+    position: fixed;
+    background-color: gold;
+}
+
+.contentContainer {
+    margin-right: 300px;
+    flex: 1;
+    padding: 20px;
+}

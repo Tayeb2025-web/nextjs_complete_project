@@ -1,0 +1,183 @@
+.header {
+  padding: 20px 30px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: white;
+  z-index: 2;
+  border-bottom: 1px solid #d7dee0;
+}
+/* header top */
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.headerTop img {
+  width: 70px;
+}
+.headerTop ul {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  color: rgb(76, 76, 76);
+}
+.headerTop ul li {
+  padding: 10px 5px;
+  user-select: none;
+}
+.headerTop ul li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.userProfileMenu ul li:hover {
+  background: #f1f8ff;
+  color: #333;
+}
+.headerTop ul li svg {
+  font-size: 20px;
+}
+.headerTop > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+}
+.searchInput {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 8px;
+}
+.searchInput input {
+  background-color: #f0f0f0;
+  width: 500px;
+  border: none;
+  padding: 20px;
+  outline: none;
+}
+.searchInput svg {
+  font-size: 25px;
+}
+.authBtn {
+  border: 1px solid gray;
+  padding: 10px 30px;
+  background-color: transparent;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+}
+.cardIconWrapper {
+  border: 1px solid rgba(128, 128, 128, 0.32);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cardIconWrapper svg {
+  font-size: 20px;
+}
+.cartIconWrapper {
+  position: relative;
+  cursor: pointer;
+}
+.cartCount {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  border: 1px solid gray;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 200, 0);
+}
+
+/* User Profile Menu */
+.userIcon {
+  position: relative;
+}
+.userIcon:hover .userProfileMenu {
+  display: block;
+}
+
+.userProfileMenu {
+  width: 280px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  z-index: 3;
+  padding: 25px 0;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: white;
+  color: rgb(56, 56, 56);
+  display: none;
+}
+
+.userProfileMenu ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.userProfileMenu ul li {
+  cursor: pointer;
+}
+.userProfileMenu ul li a {
+  display: block;
+}
+.userProfileMenu .item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 20px;
+}
+.userProfileMenu div:hover {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.userProfileMenu p {
+  display: flex;
+  gap: 10px;
+}
+.caretLeft {
+  font-size: 13px !important;
+}
+
+.skeletonAvatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 10px;
+  animation: skeleton-loading 1.2s infinite linear;
+}
+
+.skeletonName {
+  width: 60px;
+  height: 8px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: skeleton-loading 1.2s infinite linear;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

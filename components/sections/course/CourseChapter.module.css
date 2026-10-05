@@ -1,0 +1,305 @@
+.chapters {
+  margin: 4rem 0;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  direction: rtl;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #1e293b;
+  margin: 0;
+}
+
+.summary {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 1.1rem;
+  color: #475569;
+}
+
+.summary span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.accordion {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.chapter {
+  border-bottom: 1px solid #e2e8f0;
+  transition: background 0.3s;
+}
+
+.chapter:last-child {
+  border-bottom: none;
+}
+
+.chapter:hover {
+  background: #f8fafc;
+}
+
+.chapterHeader {
+  padding: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f1f5f9;
+  transition: background 0.3s;
+}
+
+.chapterHeader:hover {
+  background: #e2e8f0;
+}
+
+.chapterHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.chapterMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+.arrow {
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+}
+
+.chapter.open .arrow {
+  transform: rotate(360deg);
+}
+
+.lessons {
+  padding: 1rem 1.5rem;
+  background: white;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.lesson {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.lesson:last-child {
+  border-bottom: none;
+}
+
+.lessonInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.lessonLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #1e293b;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.lessonLink:hover {
+  color: #3b82f6;
+}
+
+.playIcon {
+  color: #10b981;
+  font-size: 1.4rem;
+}
+
+.lockIcon {
+  color: #ef4444;
+  font-size: 1.2rem;
+}
+
+.lockedLesson {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #94a3b8;
+}
+
+.lessonTitle {
+  font-size: 1.1rem;
+}
+
+.lessonMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.freeBadge {
+  background: #10b981;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.duration {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: #64748b;
+  font-size: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chapters {
+    padding: 1.5rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chapterHeader {
+    padding: 1.2rem;
+  }
+
+  .chapterHeader h3 {
+    font-size: 1.1rem;
+  }
+
+  .lesson {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .lessonMeta {
+    align-self: flex-end;
+  }
+}
+
+.lesson {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background 0.3s;
+}
+
+.lesson:hover {
+  background: #f8fafc;
+}
+
+.lessonInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  text-decoration: none;
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+}
+
+.lessonLink {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.3s;
+}
+
+.lessonLink:hover {
+  color: #3b82f6;
+}
+
+.downloadIcon {
+  color: #10b981;
+  font-size: 1.4rem;
+}
+
+.lockedLesson {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.lockIcon {
+  color: #ef4444;
+  font-size: 1.4rem;
+}
+
+.lessonMeta {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.lockMessage {
+  font-size: 0.9rem;
+  color: #ef4444;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lesson {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lessonMeta {
+    margin-top: 0.5rem;
+  }
+}
