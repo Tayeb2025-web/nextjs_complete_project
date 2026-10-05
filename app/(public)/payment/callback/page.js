@@ -1,16 +1,18 @@
 "use client";
 
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { useCart } from "@/contexts/cartContext";
 import { useAuth } from "@/contexts/authContext";
 
-export default function PaymentCallback() {
+function PaymentCallbackContent() {
   const router = useRouter();
-  const {clearCart} = useCart();
-  const {refreshUser} = useAuth();
   const searchParams = useSearchParams();
+
+  const { clearCart } = useCart();
+  const { refreshUser } = useAuth();
+
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState({
     success: false,
@@ -29,6 +31,7 @@ export default function PaymentCallback() {
         return setResult({
           success: false,
           message: "خطا در ثبت سفارش",
+          refId: "",
         });
       }
 
@@ -45,6 +48,7 @@ export default function PaymentCallback() {
         });
 
         const data = await res.json();
+
         setLoading(false);
 
         setResult({
@@ -63,11 +67,13 @@ export default function PaymentCallback() {
         setResult({
           success: false,
           message: "خطا در ارتباط با سرور",
+          refId: "",
         });
       }
     };
+
     verifyPayment();
-  }, []);
+  }, [searchParams, refreshUser, clearCart]);
 
   if (loading) {
     return (
@@ -104,5 +110,21 @@ export default function PaymentCallback() {
         {result.success ? "مشاهده دوره‌های من" : "بازگشت به سبد خرید"}
       </button>
     </div>
+  );
+}
+
+export default function PaymentCallback() {
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.card}>
+          <div className={styles.loader}></div>
+          <h2>در حال بررسی پرداخت...</h2>
+          <p>لطفاً چند لحظه صبر کنید.</p>
+        </div>
+      }
+    >
+      <PaymentCallbackContent />
+    </Suspense>
   );
 }
