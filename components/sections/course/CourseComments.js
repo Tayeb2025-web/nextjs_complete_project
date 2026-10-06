@@ -93,11 +93,10 @@ const CourseComments = ({ course, comments = [] }) => {
     }
   });
 
-  
   return (
     <section className={styles.comments}>
       <div className={styles.header}>
-        <h2 className={styles.title}>نظرات کاربران ({0})</h2>
+        <h2 className={styles.title}>نظرات کاربران ({mainComments.length})</h2>
 
         <button onClick={openModal} className={styles.addCommentBtn}>
           + نوشتن نظر
@@ -108,7 +107,7 @@ const CourseComments = ({ course, comments = [] }) => {
         <p className={styles.empty}>هنوز نظری برای این دوره ثبت نشده است.</p>
       ) : (
         <div className={styles.commentsList}>
-          {comments.map((comment) => (
+          {mainComments.map((comment) => (
             <div key={comment._id} className={styles.commentItem}>
               {/* کامنت اصلی */}
               <div className={styles.commentHeader}>

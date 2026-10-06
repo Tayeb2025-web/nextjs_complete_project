@@ -131,6 +131,7 @@ export async function POST(req) {
     await mkdir(uploadDir, { recursive: true });
     const filePath = path.join(uploadDir, filename);
     await writeFile(filePath, buffer);
+    const imageUrl = `/images/courses/${filename}`;
 
     // اگر دوره رایگان باشد، همه درس‌های آن رایگان شوند
     if (isFree && Array.isArray(chapters)) {
