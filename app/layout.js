@@ -5,7 +5,7 @@ import { CartProvider } from "@/contexts/cartContext";
 
 export const metadata = {
   icons: {
-    icon: "/images/logo.png",
+    icon: "/images/logo.webp",
   },
 };
 

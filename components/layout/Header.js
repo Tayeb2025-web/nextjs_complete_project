@@ -24,7 +24,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.headerTop}>
-        <img src="/images/logo.png" />
+        <img src="/images/logo.webp" />
         <ul>
           <li>
             <Link href="/">
