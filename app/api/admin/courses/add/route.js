@@ -2,8 +2,7 @@ import connectMongo from "@/configs/connectDB";
 import Course from "@/models/Course";
 import { isAdmin } from "@/utils/auth";
 import { NextResponse } from "next/server";
-import path from "path";
-import { writeFile , mkdir } from "fs/promises";
+import { put } from "@vercel/blob";
 
 export async function POST(req) {
   try {
@@ -14,7 +13,7 @@ export async function POST(req) {
     if (!auth.isAdmin) {
       return auth;
     }
-    
+
     // form data parse
     const formData = await req.formData();
 
@@ -29,8 +28,8 @@ export async function POST(req) {
     const slug = formData.get("slug");
     const thumbnail = formData.get("thumbnail");
     const chaptersJson = formData.get("chapters");
-    
-    // from data validation  
+
+    // from data validation
     if (!title || title.length < 5) {
       return NextResponse.json(
         { sucess: false, message: "عنوان دوره حداقل ۵ کاراکتر باید باشد" },
@@ -45,15 +44,14 @@ export async function POST(req) {
       );
     }
 
-    if(!thumbnail || !(thumbnail instanceof File)) {
-        return NextResponse.json(
-            {success:false , message: "تصویر کاور الزامی است"} , 
-            {status : 400}
-        )
+    if (!thumbnail || !(thumbnail instanceof File)) {
+      return NextResponse.json(
+        { success: false, message: "تصویر کاور الزامی است" },
+        { status: 400 },
+      );
     }
 
-
-     // 4.Chapters Parse And Validation =========================
+    // 4.Chapters Parse And Validation =========================
     let chapters = [];
     if (chaptersJson) {
       try {
@@ -100,7 +98,6 @@ export async function POST(req) {
       }
     }
 
-
     // slug validation
     if (!slug) {
       return NextResponse.json(
@@ -120,18 +117,14 @@ export async function POST(req) {
       );
     }
 
-    const bytes = await thumbnail.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    const filename = `${Date.now()}-${Math.round(
-      Math.random() * 1e9,
-    )}${path.extname(thumbnail.name)}`;
-    const uploadDir = path.join(process.cwd(), "public", "images", "courses");
-
-    await mkdir(uploadDir, { recursive: true });
-    const filePath = path.join(uploadDir, filename);
-    await writeFile(filePath, buffer);
-    const imageUrl = `/images/courses/${filename}`;
+    const { url: imageUrl } = await put(
+      `courses/${thumbnail.name}`,
+      thumbnail,
+      {
+        access: "public",
+        addRandomSuffix: true,
+      },
+    );
 
     // اگر دوره رایگان باشد، همه درس‌های آن رایگان شوند
     if (isFree && Array.isArray(chapters)) {
@@ -155,9 +148,9 @@ export async function POST(req) {
       isFree,
       level,
       status,
-      thumbnail: imageUrl ,
-      chapters ,
-      lessonsCount: chapters.reduce((sum,ch)=> sum + ch.lessons.length , 0)
+      thumbnail: imageUrl,
+      chapters,
+      lessonsCount: chapters.reduce((sum, ch) => sum + ch.lessons.length, 0),
     });
 
     await newCourse.save();
@@ -170,7 +163,6 @@ export async function POST(req) {
       },
       { status: 201 },
     );
-
   } catch (error) {
     return NextResponse.json(
       { sucess: false, message: error.message },
