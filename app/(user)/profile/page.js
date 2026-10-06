@@ -117,6 +117,8 @@ export default function Profile() {
             <h1>پروفایل من</h1>
             <p>در حال بارگذاری...</p>
           </div>
+
+          
         </div>
         <div className={styles.skeletonLarge}></div>
         <div className={styles.skeletonGrid}>
@@ -147,26 +149,22 @@ export default function Profile() {
           <h1>پروفایل من</h1>
           <p>اطلاعات حساب کاربری و سوابق خرید</p>
         </div>
+
+        <Link href="/" className={styles.headerBtn}>
+            مشاهده سایت
+          </Link>
       </div>
 
       {/* ===== Profile Card ===== */}
       <div className={styles.profileCard}>
-        <div className={styles.avatar}>
-          {user.name ? user.name[0] : "ک"}
-        </div>
+        <div className={styles.avatar}>{user.name ? user.name[0] : "ک"}</div>
         <div className={styles.profileInfo}>
           <h2 className={styles.profileName}>
             {user.name || "کاربر بدون نام"}
           </h2>
           <p className={styles.profileEmail}>{user.email}</p>
-          {user.phone && (
-            <p className={styles.profileEmail}>{user.phone}</p>
-          )}
-          <span
-            className={`${styles.profileRole} ${
-              styles[user.role]
-            }`}
-          >
+          {user.phone && <p className={styles.profileEmail}>{user.phone}</p>}
+          <span className={`${styles.profileRole} ${styles[user.role]}`}>
             {user.role === "admin" ? "ادمین" : "کاربر عادی"}
           </span>
         </div>
@@ -246,11 +244,7 @@ export default function Profile() {
 
             <div className={styles.field}>
               <label>ایمیل</label>
-              <input
-                type="email"
-                value={user.email}
-                disabled
-              />
+              <input type="email" value={user.email} disabled />
             </div>
 
             <div className={styles.field}>
@@ -304,9 +298,7 @@ export default function Profile() {
                     {formatPrice(order.totalPrice)} تومان
                   </span>
                   <span
-                    className={`${styles.orderStatus} ${
-                      styles[order.status]
-                    }`}
+                    className={`${styles.orderStatus} ${styles[order.status]}`}
                   >
                     {statusMap[order.status] || order.status}
                   </span>

@@ -2,18 +2,15 @@
 
 import Link from "next/link";
 import styles from "./Header.module.css";
-import { FaHome, FaMicrophone } from "react-icons/fa";
+import { FaHome, FaMicrophone, FaUsers } from "react-icons/fa";
 import { IoSchool } from "react-icons/io5";
-import { MdArticle, MdFavoriteBorder } from "react-icons/md";
+import { MdArticle, MdDashboard, MdFavoriteBorder } from "react-icons/md";
 import { LuUserRound } from "react-icons/lu";
 import { SlBasket } from "react-icons/sl";
-import { useEffect, useState } from "react";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { PiCaretLeft } from "react-icons/pi";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FiBox } from "react-icons/fi";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/authContext";
 import { useCart } from "@/contexts/cartContext";
 
@@ -62,7 +59,7 @@ export default function Header() {
           ) : user ? (
             <div className={`${styles.cardIconWrapper} ${styles.userIcon}`}>
               <LuUserRound />
-              <UserProfileMenu logout={logout} />
+              <UserProfileMenu role={user.role} logout={logout} />
             </div>
           ) : (
             <Link href="/auth">
@@ -84,46 +81,35 @@ export default function Header() {
 }
 
 // when hover the user icon
-const UserProfileMenu = ({logout}) => {
+const UserProfileMenu = ({ role, logout }) => {
+  const menuItems = role === "admin"
+    ? [
+        { href: "/admin/dashboard", label: "پنل مدیریت", icon: MdDashboard },
+        { href: "/admin/courses", label: "مدیریت دوره‌ها", icon: IoSchool },
+        { href: "/admin/users", label: "مدیریت کاربران", icon: FaUsers },
+      ]
+    : [
+        { href: "/profile", label: "پروفایل", icon: FaRegCircleUser },
+        { href: "/profile/courses", label: "دوره های من", icon: MdFavoriteBorder },
+        { href: "/profile/licences", label: "لایسنس های من", icon: FiBox },
+      ];
 
   return (
     <div className={styles.userProfileMenu}>
       <ul>
-        <li>
-          <Link href="/profile">
-            <div className={styles.item}>
-              <p>
-                <FaRegCircleUser />
-                <span>پروفایل</span>
-              </p>
-              <PiCaretLeft className={styles.caretLeft} />
-            </div>
-          </Link>
-        </li>
-
-        <li>
-          <Link href="/profile">
-            <div className={styles.item}>
-              <p>
-                <MdFavoriteBorder />
-                <span>دوره های من</span>
-              </p>
-              <PiCaretLeft className={styles.caretLeft} />
-            </div>
-          </Link>
-        </li>
-
-        <li>
-          <Link href="/profile">
-            <div className={styles.item}>
-              <p>
-                <FiBox />
-                <span>لایسنس های من</span>
-              </p>
-              <PiCaretLeft className={styles.caretLeft} />
-            </div>
-          </Link>
-        </li>
+        {menuItems.map(({ href, label, icon: Icon }) => (
+          <li key={href}>
+            <Link href={href}>
+              <div className={styles.item}>
+                <p>
+                  <Icon />
+                  <span>{label}</span>
+                </p>
+                <PiCaretLeft className={styles.caretLeft} />
+              </div>
+            </Link>
+          </li>
+        ))}
 
         <li>
           <div className={styles.item} onClick={logout}>

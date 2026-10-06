@@ -25,6 +25,23 @@
   font-size: 0.95rem;
 }
 
+.headerBtn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.headerBtn:hover {
+  background-color: #f1f5f9;
+}
+
 /* ========== Profile Card ========== */
 .profileCard {
   background: white;
