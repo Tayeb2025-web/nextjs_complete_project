@@ -62,7 +62,7 @@ export default function AuthPage() {
     const otpCode = `${otp[0]}${otp[1]}${otp[2]}${otp[3]}${otp[4]}`;
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:3000/api/auth/email/verify' , {
+      const res = await fetch('/api/auth/email/verify' , {
       method: "POST" ,
       body: JSON.stringify({otpCode,email}),
       headers: {"Content-Type" : "application/json"} , 
