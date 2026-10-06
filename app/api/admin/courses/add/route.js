@@ -173,7 +173,7 @@ export async function POST(req) {
 
   } catch (error) {
     return NextResponse.json(
-      { sucess: false, message: "خطای سرور — لطفاً دوباره تلاش کنید" },
+      { sucess: false, message: error.message },
       { status: 500 },
     );
   }
