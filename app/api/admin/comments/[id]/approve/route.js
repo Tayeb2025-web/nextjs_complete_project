@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import Comment from "@/models/Comment";
 import { isAdmin } from "@/utils/auth";
 import connectMongo from "@/configs/connectDB";
+import "@/models/User";
 
 export async function PATCH(req, { params }) {
   try {

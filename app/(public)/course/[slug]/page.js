@@ -7,6 +7,7 @@ import CourseDescription from "@/components/sections/course/CourseDescription";
 import CourseChapter from "@/components/sections/course/CourseChapter";
 import CourseComments from "@/components/sections/course/CourseComments";
 import Comment from "@/models/Comment";
+import "@/models/User";
 
 const CourseDetails = async ({ params }) => {
   const { slug } = await params;
