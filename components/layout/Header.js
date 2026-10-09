@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import styles from "./Header.module.css";
-import { FaHome, FaMicrophone, FaUsers } from "react-icons/fa";
+import { FaHome, FaLaptopCode, FaUsers } from "react-icons/fa";
 import { IoSchool } from "react-icons/io5";
 import { MdArticle, MdDashboard, MdFavoriteBorder } from "react-icons/md";
 import { LuUserRound } from "react-icons/lu";
@@ -13,18 +13,22 @@ import { RiLogoutBoxRLine } from "react-icons/ri";
 import { FiBox } from "react-icons/fi";
 import { useAuth } from "@/contexts/authContext";
 import { useCart } from "@/contexts/cartContext";
+import { useSiteSettings } from "@/contexts/siteSettingsContext";
 
 export default function Header() {
- 
-  const {loading , logout , user} = useAuth();
+  const settings = useSiteSettings();
 
-  const {cartCount} = useCart()
+  const { loading, logout, user } = useAuth();
 
+  const { cartCount } = useCart();
 
   return (
     <header className={styles.header}>
       <div className={styles.headerTop}>
-        <img src="/images/logo.webp" />
+        <Link href="/" className={styles.brand} aria-label={settings.siteName}>
+          <img src="/images/logo.webp" alt="" />
+          <span className={styles.brandName}>{settings.siteName}</span>
+        </Link>
         <ul>
           <li>
             <Link href="/">
@@ -39,9 +43,9 @@ export default function Header() {
             </Link>
           </li>
           <li>
-            <Link href="/podcasts">
-              <FaMicrophone />
-              <span>پادکست</span>
+            <Link href="/exercises">
+              <FaLaptopCode />
+              <span>تمرین‌ها</span>
             </Link>
           </li>
           <li>
@@ -54,8 +58,7 @@ export default function Header() {
 
         <div>
           {loading ? (
-            <div className={styles.skeletonAvatar}></div> 
-            
+            <div className={styles.skeletonAvatar}></div>
           ) : user ? (
             <div className={`${styles.cardIconWrapper} ${styles.userIcon}`}>
               <LuUserRound />
@@ -70,7 +73,9 @@ export default function Header() {
             <div
               className={`${styles.cardIconWrapper} ${styles.cartIconWrapper}`}
             >
-              {cartCount> 0 && <div className={styles.cartCount}>{cartCount}</div>}
+              {cartCount > 0 && (
+                <div className={styles.cartCount}>{cartCount}</div>
+              )}
               <SlBasket />
             </div>
           </Link>
@@ -82,17 +87,22 @@ export default function Header() {
 
 // when hover the user icon
 const UserProfileMenu = ({ role, logout }) => {
-  const menuItems = role === "admin"
-    ? [
-        { href: "/admin/dashboard", label: "پنل مدیریت", icon: MdDashboard },
-        { href: "/admin/courses", label: "مدیریت دوره‌ها", icon: IoSchool },
-        { href: "/admin/users", label: "مدیریت کاربران", icon: FaUsers },
-      ]
-    : [
-        { href: "/profile", label: "پروفایل", icon: FaRegCircleUser },
-        { href: "/profile/courses", label: "دوره های من", icon: MdFavoriteBorder },
-        { href: "/profile/licences", label: "لایسنس های من", icon: FiBox },
-      ];
+  const menuItems =
+    role === "admin"
+      ? [
+          { href: "/admin/dashboard", label: "پنل مدیریت", icon: MdDashboard },
+          { href: "/admin/courses", label: "مدیریت دوره‌ها", icon: IoSchool },
+          { href: "/admin/users", label: "مدیریت کاربران", icon: FaUsers },
+        ]
+      : [
+          { href: "/profile", label: "پروفایل", icon: FaRegCircleUser },
+          {
+            href: "/profile/courses",
+            label: "دوره های من",
+            icon: MdFavoriteBorder,
+          },
+          { href: "/profile/licences", label: "لایسنس های من", icon: FiBox },
+        ];
 
   return (
     <div className={styles.userProfileMenu}>

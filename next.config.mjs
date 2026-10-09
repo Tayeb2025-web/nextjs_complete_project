@@ -3,6 +3,7 @@ const nextConfig = {
   async rewrites() {
     // Saved carts and existing links can still contain these former PNG URLs.
     const courseImages = [
+      "1790662751854-998698358",
       "1790663303185-800084325",
       "1790663867243-527220811",
       "1790664478983-958283752",

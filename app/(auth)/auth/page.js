@@ -162,7 +162,7 @@ export default function AuthPage() {
         )}
         {isCodeSent && (
           <>
-            <h2>سید طیب پویا</h2>
+            <h2>سورن کد</h2>
             <div className={styles.gotoBack} onClick={handleBackToEmail}>
               <IoMdArrowRoundBack size={"20px"} />
             </div>

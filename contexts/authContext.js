@@ -1,61 +1,78 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import toast from "react-hot-toast";
 
 const AuthContext = createContext();
 
+function normalizeUser(user) {
+  if (!user) return null;
+
+  const id = user._id ?? user.id;
+  return id ? { ...user, id: String(id), _id: String(id) } : user;
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [user, setUserState] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const authVersion = useRef(0);
 
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch("/api/auth/me", {
-          credentials: "include", // مهم برای ارسال کوکی‌ها
-        });
-
-        const data = await res.json();
-
-        if (data.success && data.user) {
-          setUser(data.user);
-        } else {
-          setUser(null);
-        }
-      } catch (err) {
-        console.error("Error fetching user:", err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
+  const setUser = useCallback((nextUser) => {
+    authVersion.current += 1;
+    setUserState((previous) =>
+      normalizeUser(
+        typeof nextUser === "function" ? nextUser(previous) : nextUser
+      )
+    );
+    setLoading(false);
   }, []);
 
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
+    const version = ++authVersion.current;
+
     try {
       const res = await fetch("/api/auth/me", {
-        credentials: "include", // مهم برای ارسال کوکی‌ها
+        credentials: "include",
+        cache: "no-store",
       });
 
       const data = await res.json();
+      if (authVersion.current !== version) return;
 
-      if (data.success && data.user) {
-        setUser(data.user);
-      } else {
-        setUser(null);
+      if (!res.ok) {
+        if ([401, 403, 404].includes(res.status)) {
+          setUser(null);
+          return;
+        }
+        throw new Error("Failed to refresh user");
       }
+
+      setUser(data.success && data.user ? data.user : null);
     } catch (err) {
-      console.error("Error fetching user:", err);
-      setUser(null);
+      if (authVersion.current === version) {
+        console.error("Error fetching user:", err);
+      }
+    } finally {
+      if (authVersion.current === version) setLoading(false);
     }
-  };
+  }, [setUser]);
+
+  useEffect(() => {
+    refreshUser();
+    return () => {
+      authVersion.current += 1;
+    };
+  }, [refreshUser]);
 
   // logout function
   const logout = async () => {

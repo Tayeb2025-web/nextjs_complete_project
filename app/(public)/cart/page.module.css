@@ -274,3 +274,54 @@
     align-self: flex-end;
   }
 }
+
+.couponForm {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.couponForm label {
+  color: #334155;
+  font-weight: 600;
+}
+.couponForm p {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.8;
+}
+.couponRow {
+  display: flex;
+  gap: 0.5rem;
+}
+.couponRow input {
+  min-width: 0;
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+.couponRow button {
+  padding: 0.7rem 1rem;
+  background: #3b82f6;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+}
+.couponForm .removeCoupon {
+  border: none;
+  background: none;
+  color: #ef4444;
+  cursor: pointer;
+  text-align: right;
+}
+.couponForm .couponError {
+  color: #b91c1c;
+}
+.couponError button {
+  padding: 0.3rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+}

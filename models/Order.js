@@ -38,6 +38,11 @@ const orderSchema = new mongoose.Schema(
       min: 0,
     },
 
+    subtotal: { type: Number, min: 0 },
+    discountAmount: { type: Number, min: 0, default: 0 },
+    coupon: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon", default: null },
+    couponCode: { type: String, default: "" },
+
     status: {
       type: String,
       enum: ["pending", "paid", "failed", "cancelled"],

@@ -4,24 +4,79 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import { FaTrash, FaShoppingCart, FaArrowLeft } from "react-icons/fa";
 import { useCart } from "@/contexts/cartContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/authContext";
 import { useRouter } from "next/navigation";
 
 const Cart = () => {
-  const { cart, totalPrice, removeFromCart, clearCart } = useCart();
+  const { cart, totalPrice, removeFromCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const { user, loading: authLoading } = useAuth();
+  const [couponInput, setCouponInput] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+  const [quote, setQuote] = useState(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
+  const [quoteError, setQuoteError] = useState("");
+  const [retry, setRetry] = useState(0);
+  const cartIds = cart.map((course) => course._id).join(",");
+  const userId = user?._id ?? user?.id;
+  const quoteKey = `${userId || ""}|${cartIds}|${couponCode}`;
+  const currentQuote = quote?.key === quoteKey ? quote : null;
+  const finalPrice = currentQuote ? currentQuote.totalPrice : totalPrice;
+
+  useEffect(() => {
+    const controller = new AbortController();
+    if (!userId || !cartIds) {
+      setQuote(null);
+      setQuoteError("");
+      setQuoteLoading(false);
+      return;
+    }
+    const loadQuote = async () => {
+      setQuoteLoading(true);
+      setQuoteError("");
+      try {
+        const res = await fetch("/api/cart/quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ courseIds: cartIds.split(","), couponCode }),
+          signal: controller.signal,
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success)
+          throw new Error(data.message || "خطا در بررسی مبلغ سبد خرید");
+        setQuote({ ...data, key: quoteKey });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          setQuote(null);
+          setQuoteError(error.message);
+        }
+      } finally {
+        if (!controller.signal.aborted) setQuoteLoading(false);
+      }
+    };
+    loadQuote();
+    return () => controller.abort();
+  }, [userId, cartIds, couponCode, quoteKey, retry]);
 
   const router = useRouter();
 
   const handleCheckout = async () => {
+    if (!userId) {
+      router.push("/auth");
+      return;
+    }
+    if (!currentQuote) return;
+    setLoading(true);
     try {
       const orderRes = await fetch("/api/orders", {
         method: "POST",
         body: JSON.stringify({
           courseIds: cart.map((course) => course._id),
+          couponCode,
+          expectedTotal: currentQuote.totalPrice,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +86,8 @@ const Cart = () => {
       const orderData = await orderRes.json();
 
       if (!orderData.success) {
-        return toast.error("خطا هنگام ثبت سفارش");
+        setRetry((value) => value + 1);
+        return toast.error(orderData.message || "خطا هنگام ثبت سفارش");
       }
 
       toast.success("در حال انتقال به درگاه پرداخت");
@@ -52,6 +108,8 @@ const Cart = () => {
       router.push(paymentData.paymentUrl);
     } catch (error) {
       toast.error("خطای سرور");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,7 +155,12 @@ const Cart = () => {
               </div>
 
               <div className={styles.itemPrice}>
-                {(course.discountPrice || course.price)?.toLocaleString()} تومان
+                {(
+                  currentQuote?.items.find((item) => item.course === course._id)
+                    ?.price ??
+                  (course.isFree ? 0 : course.discountPrice || course.price)
+                )?.toLocaleString()}{" "}
+                تومان
               </div>
 
               <button
@@ -120,24 +183,105 @@ const Cart = () => {
           <div className={styles.priceDetails}>
             <div className={styles.priceRow}>
               <span>مجموع قیمت</span>
-              <span>{totalPrice.toLocaleString()} تومان</span>
+              <span>
+                {(currentQuote?.subtotal ?? totalPrice).toLocaleString()} تومان
+              </span>
             </div>
-            {/* اگر تخفیف کلی داشتی، اینجا اضافه کن */}
           </div>
+
+          {currentQuote?.discountAmount > 0 && (
+            <div className={styles.priceRow}>
+              <span>تخفیف کد {currentQuote.couponCode}</span>
+              <span>{currentQuote.discountAmount.toLocaleString()} تومان</span>
+            </div>
+          )}
 
           <div className={styles.totalPrice}>
             <span>پرداخت نهایی</span>
             <span className={styles.finalAmount}>
-              {totalPrice.toLocaleString()} تومان
+              {finalPrice.toLocaleString()} تومان
             </span>
           </div>
 
+          <form
+            className={styles.couponForm}
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (couponInput.trim()) {
+                setCouponCode(couponInput.trim().toUpperCase());
+                setRetry((value) => value + 1);
+              }
+            }}
+          >
+            <label htmlFor="cart-coupon">کد تخفیف</label>
+            <div className={styles.couponRow}>
+              <input
+                id="cart-coupon"
+                dir="ltr"
+                maxLength={32}
+                value={couponInput}
+                onChange={(event) =>
+                  setCouponInput(event.target.value.toUpperCase())
+                }
+                placeholder="کد تخفیف را وارد کنید"
+                disabled={loading || !userId}
+              />
+              <button
+                disabled={
+                  loading || quoteLoading || !userId || !couponInput.trim()
+                }
+              >
+                اعمال
+              </button>
+            </div>
+            {couponCode && (
+              <button
+                type="button"
+                className={styles.removeCoupon}
+                onClick={() => {
+                  setCouponCode("");
+                  setCouponInput("");
+                }}
+                disabled={loading}
+              >
+                حذف کد تخفیف
+              </button>
+            )}
+            {quoteLoading && (
+              <p role="status">در حال بررسی مبلغ و کد تخفیف...</p>
+            )}
+            {quoteError && (
+              <p role="alert" className={styles.couponError}>
+                {quoteError}{" "}
+                <button
+                  type="button"
+                  onClick={() => setRetry((value) => value + 1)}
+                  disabled={loading || quoteLoading}
+                >
+                  تلاش دوباره
+                </button>
+              </p>
+            )}
+            {!userId && !authLoading && (
+              <p>برای اعمال کد تخفیف، ابتدا وارد حساب شوید.</p>
+            )}
+          </form>
+
           <button
             onClick={handleCheckout}
-            disabled={loading}
+            type="button"
+            disabled={
+              loading ||
+              authLoading ||
+              (userId && (!currentQuote || quoteLoading))
+            }
             className={styles.checkoutBtn}
           >
-            {loading ? "در حال پردازش..." : "تکمیل خرید"}
+            {loading
+              ? "در حال پردازش..."
+              : !userId && !authLoading
+                ? "ورود و تکمیل خرید"
+                : "تکمیل خرید"}
           </button>
 
           <p className={styles.secureNote}>پرداخت امن با درگاه معتبر</p>
