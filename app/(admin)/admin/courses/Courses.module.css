@@ -123,6 +123,9 @@
 }
 
 .statusBadge {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
   padding: 0.4rem 0.8rem;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -149,6 +152,28 @@
   gap: 0.8rem;
   flex-wrap: wrap;
   padding-top: 25px;
+}
+
+.courseActionsCell {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.courseActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.8rem;
+}
+
+.courseActions > a,
+.courseActions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 44px;
+  white-space: nowrap;
 }
 
 .editBtn {

@@ -191,21 +191,26 @@ function CoursesList() {
                   <td dir="ltr">
                     {new Date(course.createdAt).toLocaleDateString("fa-IR")}
                   </td>
-                  <td className={styles.actions}>
-                    <Link href={`/admin/courses/${course.slug}/edit`} className={styles.editBtn}>
-                      ویرایش
-                    </Link>
+                  <td className={styles.courseActionsCell}>
+                    <div className={styles.courseActions}>
+                      <Link
+                        href={`/admin/courses/${course.slug}/edit`}
+                        className={styles.editBtn}
+                      >
+                        ویرایش
+                      </Link>
 
-                    <button className={styles.statusBtn}>
-                      {course.status === "published" ? "غیرفعال" : "انتشار"}
-                    </button>
+                      <button className={styles.statusBtn}>
+                        {course.status === "published" ? "غیرفعال" : "انتشار"}
+                      </button>
 
-                    <button
-                      className={styles.deleteBtn}
-                      onClick={() => deleteCourse(course.slug)}
-                    >
-                      حذف
-                    </button>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() => deleteCourse(course.slug)}
+                      >
+                        حذف
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
