@@ -6,16 +6,15 @@
 
 /* ===== بخش بالا: دو ستونه ===== */
 .courseTop {
-  display: grid;
-  grid-template-columns: minmax(0, 1.24fr) minmax(0, 1fr);
-  align-items: start;
-  gap: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 .courseInfo {
-  min-width: 0;
+  width: 52%;
 }
 .courseThumbnail {
-  min-width: 0;
+  width: 42%;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(94, 129, 209, 0.16);
@@ -28,12 +27,8 @@
 }
 .courseTitle {
   margin-bottom: 15px;
-  overflow-wrap: anywhere;
-  line-height: 1.6;
 }
 .courseDesc {
-  overflow-wrap: anywhere;
-  line-height: 1.9;
   text-align: justify;
   display: -webkit-box;
   line-clamp: 3;
@@ -47,8 +42,6 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 30px;
-  gap: 16px;
-  flex-wrap: wrap;
 }
 .coursePayment button {
   padding: 10px 20px;
@@ -74,14 +67,13 @@
 
 /* ===== بخش پایین: جزئیات دوره افقی ===== */
 .courseMeta {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
 }
 .courseDetailBox {
   box-shadow: 0 8px 24px rgba(94, 129, 209, 0.16);
-  min-width: 0;
-  overflow-wrap: anywhere;
+  width: calc(33.33% - 14px);
   padding: 15px;
   border-radius: 10px;
 }
@@ -100,15 +92,6 @@
   padding: 10px;
   border-radius: 16px;
   border: 2px solid #10b981;
-  flex-wrap: wrap;
-}
-.purchasedBox svg,
-.coursePayment button svg {
-  flex-shrink: 0;
-}
-.purchasedBox span {
-  min-width: 0;
-  flex: 1;
 }
 
 .startLearningBtn {
@@ -153,8 +136,6 @@
 
 .priceBox {
   text-align: center;
-  max-width: 100%;
-  overflow-wrap: anywhere;
 }
 
 .originalPrice {
@@ -166,66 +147,4 @@
   font-size: 25px;
   font-weight: bold;
   /* color: #f59e0b; */
-}
-
-@media (max-width: 900px) {
-  .courseTop {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  .courseThumbnail {
-    order: -1;
-    width: 100%;
-    max-width: 640px;
-    justify-self: center;
-  }
-  .courseTitle {
-    font-size: 1.6rem;
-  }
-  .courseDesc {
-    display: block;
-  }
-}
-@media (max-width: 560px) {
-  .courseIntro {
-    gap: 24px;
-  }
-  .courseTitle {
-    font-size: 1.35rem;
-  }
-  .courseMeta {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-  .courseDetailBox {
-    padding: 14px;
-    font-size: 0.9rem;
-    line-height: 1.8;
-  }
-  .coursePayment {
-    flex-direction: column;
-    align-items: stretch;
-    margin-top: 20px;
-  }
-  .priceBox {
-    order: -1;
-    text-align: start;
-  }
-  .finalPrice {
-    font-size: 1.4rem;
-  }
-  .coursePayment button {
-    width: 100%;
-    min-height: 48px;
-    justify-content: center;
-    padding: 12px;
-  }
-  .purchasedBox {
-    font-size: 0.9rem;
-  }
-  .startLearningBtn {
-    width: 100%;
-    text-align: center;
-    margin: 0;
-  }
 }

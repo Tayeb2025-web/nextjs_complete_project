@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import Course from "@/models/Course";
 import connectMongo from "@/configs/connectDB";
-import Category from "@/models/Category";
 
 
 export async function GET(req) {
@@ -9,16 +8,9 @@ export async function GET(req) {
     await connectMongo();
 
     const { searchParams } = new URL(req.url);
-    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit")) || 4));
-    const query = { status: "published" };
-    const categorySlug = searchParams.get("category");
-    if (categorySlug) {
-      const category = await Category.findOne({ slug: categorySlug, isActive: true }).select("_id").lean();
-      if (!category) return NextResponse.json({ courses: [] });
-      query.category = category._id;
-    }
+    const limit = parseInt(searchParams.get("limit")) || 4;
 
-    const courses = await Course.find(query)
+    const courses = await Course.find({ status: "published" })
       .sort({ createdAt: -1 })
       .limit(limit)
       .select(

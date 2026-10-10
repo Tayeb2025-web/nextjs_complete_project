@@ -23,12 +23,9 @@ export default function CourseDescription({ fullDescription }) {
     },
   });
   return (
-    <section className={`section ${styles.description}`}>
+    <section className={`section`}>
       <h2 className={styles.descriptionTitle}>توضیحات کامل دوره</h2>
-      <div
-        className={styles.content}
-        dangerouslySetInnerHTML={{ __html: cleanHtml }}
-      />
+      <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
     </section>
   );
 }

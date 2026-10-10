@@ -7,8 +7,6 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import CourseCategorySelect from "@/components/shared/admin/CourseCategorySelect";
-import AdminCourseLicences from "@/components/shared/admin/AdminCourseLicences";
 
 // CKEditor دینامیک
 const CKEditor = dynamic(() => import("@/components/sections/CKEditor"), {
@@ -18,7 +16,6 @@ const CKEditor = dynamic(() => import("@/components/sections/CKEditor"), {
 
 export default function EditCourse() {
   const [formData, setFormData] = useState(null);
-  const [courseId, setCourseId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [thumbnail, setThumbnail] = useState(null);
@@ -131,7 +128,6 @@ export default function EditCourse() {
     data.append("fullDescription", formData.fullDescription);
     data.append("price", formData.price || "0");
     data.append("discountPrice", formData.discountPrice || "");
-    data.append("category", formData.category || "");
     data.append("isFree", formData.isFree);
     data.append("level", formData.level);
     data.append("status", formData.status);
@@ -178,7 +174,6 @@ export default function EditCourse() {
         }
 
         const { course } = await res.json();
-        setCourseId(course._id);
 
         setFormData({
           title: course.title || "",
@@ -186,7 +181,6 @@ export default function EditCourse() {
           fullDescription: course.fullDescription || "",
           price: course.price || "",
           discountPrice: course.discountPrice || "",
-          category: course.category || "",
           isFree: course.isFree || false,
           level: course.level || "beginner",
           status: course.status || "draft",
@@ -260,10 +254,6 @@ export default function EditCourse() {
             dir="ltr"
             style={{ textAlign: "left", direction: "ltr" }}
           />
-        </div>
-
-        <div className={styles.field}>
-          <CourseCategorySelect value={formData.category} onChange={(category) => setFormData((previous) => ({ ...previous, category }))} />
         </div>
 
         {/* توضیح کوتاه */}
@@ -548,7 +538,6 @@ export default function EditCourse() {
           </p>
         )}
       </form>
-      {courseId && <AdminCourseLicences key={courseId} courseId={courseId} />}
     </div>
   );
 }

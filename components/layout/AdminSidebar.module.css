@@ -1,6 +1,6 @@
 .sidebar {
   width: 100%;
-  min-height: 100%;
+  height: 100%;
   background-color: #222831;
   padding: 20px 0;
   padding-right: 20px;
@@ -12,18 +12,6 @@
   color: #ebd5ab;
   font-size: 20px;
   padding-left: 20px;
-}
-.brandRow {
-  position: relative;
-}
-.closeMenu {
-  display: none;
-}
-.sidebar a:focus-visible,
-.sidebar button:focus-visible {
-  outline: 2px solid #ebd5ab;
-  outline-offset: 3px;
-  border-radius: 6px;
 }
 .sidebar ul {
   list-style: none;
@@ -45,13 +33,11 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  min-height: 44px;
 }
 .sidebar ul li a {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 34px;
 }
 .sidebar ul li a svg {
   font-size: 20px;
@@ -62,31 +48,4 @@
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
   color: #ebd5ab !important;
-}
-@media (max-width: 1024px) {
-  .logo {
-    padding-inline-end: 60px;
-  }
-  .closeMenu {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: -8px;
-    inset-inline-end: 12px;
-    width: 44px;
-    height: 44px;
-    border: 1px solid #56606d;
-    border-radius: 8px;
-    color: #ebd5ab;
-    background: #393e46;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  .sidebar ul {
-    gap: 4px;
-  }
-  .sidebar ul li a {
-    min-height: 44px;
-  }
 }

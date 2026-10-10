@@ -12,8 +12,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .header h1 {
@@ -70,12 +68,11 @@
 
 .infoGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
 .infoGrid div {
-  min-width: 0;
   background: #f8fafc;
   border-radius: 12px;
   padding: 1rem;
@@ -203,8 +200,6 @@
 
 .courseContent {
   flex: 1;
-  min-width: 0;
-  overflow-wrap: anywhere;
 }
 
 .courseContent h3 {
@@ -244,57 +239,4 @@
   padding: 5rem;
   font-size: 1.2rem;
   color: #64748b;
-}
-
-@media (max-width: 1024px) {
-  .infoGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 640px) {
-  .container {
-    padding: 0;
-    margin: 1rem auto;
-  }
-  .header {
-    align-items: stretch;
-    flex-direction: column;
-  }
-  .header h1 {
-    font-size: 1.5rem;
-  }
-  .card {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-  .card h2 {
-    font-size: 1.2rem;
-  }
-  .infoGrid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  .user {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    overflow-wrap: anywhere;
-  }
-  .user > div {
-    min-width: 0;
-    max-width: 100%;
-  }
-  .course {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .courseContent {
-    flex-basis: 100%;
-  }
-  .viewBtn {
-    width: 100%;
-  }
-  .loading,
-  .notFound {
-    padding: 2rem 1rem;
-  }
 }

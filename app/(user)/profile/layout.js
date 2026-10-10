@@ -1,10 +1,16 @@
-import ProfileShell from "@/components/shared/profile/ProfileShell";
-import { SiteSettingsProvider } from "@/contexts/siteSettingsContext";
+import UserSidebar from '@/components/layout/UserSidebar';
+import styles from './layout.module.css';
 
-export default function UserLayout({ children }) {
-  return (
-    <SiteSettingsProvider>
-      <ProfileShell>{children}</ProfileShell>
-    </SiteSettingsProvider>
-  );
+export default function UserLayout ({children}) {
+
+    return (
+        <div className={styles.userLayout}>
+            <div className={styles.sidebarContainer} >
+                <UserSidebar/>
+            </div>
+            <div className={styles.contentContainer}>
+                {children}
+            </div>
+        </div>
+    )
 }

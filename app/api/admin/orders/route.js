@@ -3,19 +3,18 @@
 import { NextResponse } from "next/server";
 import Order from "@/models/Order";
 import Course from "@/models/Course";
-import User from "@/models/User";
 import { isAdmin } from "@/utils/auth";
 import connectMongo from "@/configs/connectDB";
 
 export async function GET(req) {
   try {
+    await connectMongo();
+
     // 1.admin check ==========================
     const auth = isAdmin(req);
     if (!auth.isAdmin) {
       return auth;
     }
-
-    await connectMongo();
 
     // 2.get orders ===========================
     const { searchParams } = new URL(req.url);
@@ -23,8 +22,8 @@ export async function GET(req) {
     const limit = 5;
 
     const orders = await Order.find()
-      .populate({ path: "user", select: "name phone", model: User })
-      .populate({ path: "items.course", select: "title slug", model: Course })
+      .populate("user", "name phone")
+      .populate("items.course", "title slug")
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)

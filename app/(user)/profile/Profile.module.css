@@ -1,5 +1,4 @@
 .container {
-  min-width: 0;
   max-width: 1200px;
   margin: 1rem auto;
   padding: 1.5rem;
@@ -8,8 +7,6 @@
 
 /* ========== Header ========== */
 .header {
-  gap: 16px;
-  flex-wrap: wrap;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,7 +44,6 @@
 
 /* ========== Profile Card ========== */
 .profileCard {
-  flex-wrap: wrap;
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -73,12 +69,10 @@
 }
 
 .profileInfo {
-  min-width: 0;
   flex: 1;
 }
 
 .profileName {
-  overflow-wrap: anywhere;
   font-size: 1.5rem;
   font-weight: bold;
   color: #1e293b;
@@ -86,7 +80,6 @@
 }
 
 .profileEmail {
-  overflow-wrap: anywhere;
   color: #64748b;
   font-size: 0.95rem;
   margin-bottom: 3px;
@@ -112,8 +105,6 @@
 }
 
 .profileMeta {
-  min-width: 0;
-  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -121,7 +112,6 @@
 }
 
 .joinDate {
-  flex-wrap: wrap;
   font-size: 0.85rem;
   color: #94a3b8;
   display: flex;
@@ -150,8 +140,7 @@
 
 /* ========== Stats Grid ========== */
 .statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
   gap: 20px;
   margin-bottom: 2rem;
   flex-wrap: wrap;
@@ -159,7 +148,7 @@
 
 .statCard {
   flex: 1;
-  min-width: 0;
+  min-width: 180px;
   padding: 22px;
   border-radius: 12px;
   background: white;
@@ -206,7 +195,6 @@
 }
 
 .statInfo h3 {
-  overflow-wrap: anywhere;
   font-size: 1.4rem;
   font-weight: bold;
   color: #1e293b;
@@ -221,14 +209,12 @@
 
 /* ========== Bottom Grid ========== */
 .bottomGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
   gap: 20px;
 }
 
 /* ========== Edit Form ========== */
 .editSection {
-  min-width: 0;
   flex: 1;
   background: white;
   border-radius: 12px;
@@ -237,8 +223,6 @@
 }
 
 .sectionHeader {
-  gap: 12px;
-  flex-wrap: wrap;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -258,7 +242,6 @@
 }
 
 .field {
-  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -271,9 +254,6 @@
 }
 
 .field input {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
   padding: 12px 14px;
   border: 2px solid #e2e8f0;
   border-radius: 8px;
@@ -312,7 +292,6 @@
 
 /* ========== Recent Orders ========== */
 .ordersSection {
-  min-width: 0;
   flex: 1;
   background: white;
   border-radius: 12px;
@@ -321,8 +300,6 @@
 }
 
 .orderItem {
-  flex-wrap: wrap;
-  gap: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -335,15 +312,12 @@
 }
 
 .orderInfo {
-  min-width: 0;
-  flex: 1 1 160px;
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
 .orderCourses {
-  overflow-wrap: anywhere;
   font-weight: 600;
   font-size: 0.9rem;
   color: #1e293b;
@@ -355,8 +329,6 @@
 }
 
 .orderRight {
-  max-width: 100%;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -364,7 +336,6 @@
 }
 
 .orderAmount {
-  overflow-wrap: anywhere;
   font-weight: bold;
   font-size: 0.9rem;
   color: #1e293b;
@@ -444,8 +415,7 @@
 }
 
 .skeletonGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
   gap: 20px;
   margin-bottom: 2rem;
   flex-wrap: wrap;
@@ -453,7 +423,7 @@
 
 .skeletonCard {
   flex: 1;
-  min-width: 0;
+  min-width: 180px;
   height: 85px;
   border-radius: 12px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -476,98 +446,5 @@
   }
   100% {
     background-position: -200% 0;
-  }
-}
-.statInfo {
-  min-width: 0;
-}
-@media (max-width: 1280px) {
-  .statsGrid,
-  .skeletonGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 1100px) {
-  .bottomGrid {
-    grid-template-columns: 1fr;
-  }
-  .profileMeta {
-    flex-basis: 100%;
-    align-items: flex-start;
-  }
-}
-@media (max-width: 768px) {
-  .container {
-    padding: 0;
-  }
-  .headerTitle h1 {
-    font-size: 1.5rem;
-  }
-  .profileCard,
-  .editSection,
-  .ordersSection {
-    padding: 20px;
-  }
-  .profileCard {
-    gap: 16px;
-  }
-  .avatar {
-    width: 64px;
-    height: 64px;
-    font-size: 1.7rem;
-  }
-  .profileName {
-    font-size: 1.25rem;
-  }
-}
-@media (max-width: 480px) {
-  .header {
-    align-items: stretch;
-    flex-direction: column;
-    margin-bottom: 24px;
-  }
-  .headerBtn {
-    text-align: center;
-  }
-  .profileCard {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 24px;
-  }
-  .profileInfo {
-    width: 100%;
-  }
-  .profileCard,
-  .editSection,
-  .ordersSection {
-    padding: 16px;
-  }
-  .statsGrid,
-  .skeletonGrid {
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  .statCard {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 14px;
-    gap: 12px;
-  }
-  .statIcon {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-  .statInfo h3 {
-    font-size: 1.15rem;
-  }
-  .saveBtn {
-    align-self: stretch;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .skeletonCard,
-  .skeletonLarge {
-    animation: none;
   }
 }

@@ -1,55 +1,35 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import styles from "./Courses.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
-function CoursesList() {
+export default function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" });
   const [searchTerm, setSearchTerm] = useState("");
-  const [categories, setCategories] = useState([]);
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category") || "";
-  const router = useRouter();
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/admin/categories", { signal: controller.signal })
-      .then((res) => res.json())
-      .then((data) => { if (data.success) setCategories(data.categories); })
-      .catch((error) => { if (error.name !== "AbortError") console.error(error); });
-    return () => controller.abort();
-  }, []);
-
-  useEffect(() => {
-    const controller = new AbortController();
     const getCourses = async () => {
-      setLoading(true);
-      setMessage({ text: "", type: "" });
       try {
-        const query = new URLSearchParams({ search: searchTerm, category });
-        const res = await fetch(`/api/admin/courses?${query}`, { signal: controller.signal, cache: "no-store" });
+        const res = await fetch(`/api/admin/courses?search=${searchTerm}`);
         if (!res.ok) throw new Error();
 
         const data = await res.json();
         setCourses(data.courses || []);
       } catch (err) {
-        if (err.name === "AbortError") return;
         console.error(err);
         setMessage({ text: "خطا در بارگذاری لیست دوره‌ها", type: "error" });
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        setLoading(false);
       }
     };
 
     getCourses();
-    return () => controller.abort();
-  }, [searchTerm, category]);
+  }, [searchTerm]);
 
   const deleteCourse = async (slug) => {
     if (!confirm(" مطمئنی میخوای دوره رو حذف کنی؟")) {
@@ -97,16 +77,7 @@ function CoursesList() {
           placeholder="جستجو در عنوان..."
           className={styles.searchInput}
           onChange={(e) => setSearchTerm(e.target.value)}
-          value={searchTerm}
         />
-        <select className={styles.filterSelect} aria-label="فیلتر دسته‌بندی" value={category} onChange={(event) => {
-          const query = new URLSearchParams(searchParams.toString());
-          if (event.target.value) query.set("category", event.target.value); else query.delete("category");
-          router.replace(`/admin/courses${query.size ? `?${query}` : ""}`, { scroll: false });
-        }}>
-          <option value="">همه دسته‌بندی‌ها</option><option value="none">بدون دسته‌بندی</option>
-          {categories.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}
-        </select>
       </div>
 
       {message.text && (
@@ -124,7 +95,6 @@ function CoursesList() {
               <tr>
                 <th>تصویر</th>
                 <th>عنوان دوره</th>
-                <th>دسته‌بندی</th>
                 <th>قیمت</th>
                 <th>درس‌ها</th>
                 <th>وضعیت</th>
@@ -153,7 +123,6 @@ function CoursesList() {
                       {course.title}
                     </Link>
                   </td>
-                  <td>{course.category?.name || "بدون دسته‌بندی"}</td>
                   <td>
                     {course.isFree ? (
                       <span className={styles.freeBadge}>رایگان</span>
@@ -191,26 +160,21 @@ function CoursesList() {
                   <td dir="ltr">
                     {new Date(course.createdAt).toLocaleDateString("fa-IR")}
                   </td>
-                  <td className={styles.courseActionsCell}>
-                    <div className={styles.courseActions}>
-                      <Link
-                        href={`/admin/courses/${course.slug}/edit`}
-                        className={styles.editBtn}
-                      >
-                        ویرایش
-                      </Link>
+                  <td className={styles.actions}>
+                    <Link href={`/admin/courses/${course.slug}/edit`} className={styles.editBtn}>
+                      ویرایش
+                    </Link>
 
-                      <button className={styles.statusBtn}>
-                        {course.status === "published" ? "غیرفعال" : "انتشار"}
-                      </button>
+                    <button className={styles.statusBtn}>
+                      {course.status === "published" ? "غیرفعال" : "انتشار"}
+                    </button>
 
-                      <button
-                        className={styles.deleteBtn}
-                        onClick={() => deleteCourse(course.slug)}
-                      >
-                        حذف
-                      </button>
-                    </div>
+                    <button
+                      className={styles.deleteBtn}
+                      onClick={() => deleteCourse(course.slug)}
+                    >
+                      حذف
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -219,13 +183,5 @@ function CoursesList() {
         </div>
       )}
     </div>
-  );
-}
-
-export default function Courses() {
-  return (
-    <Suspense fallback={<div className={styles.container}>در حال بارگذاری دوره‌ها...</div>}>
-      <CoursesList />
-    </Suspense>
   );
 }

@@ -4,8 +4,6 @@ import { isAdmin } from "@/utils/auth";
 import { NextResponse } from "next/server";
 import path from 'path'
 import {writeFile , mkdir} from 'fs/promises'
-import { resolveCourseCategory } from "@/utils/courseCategory";
-import { validateCoursePricing } from "@/utils/coursePrice";
 
 export async function GET(req, { params }) {
   try {
@@ -127,13 +125,6 @@ export async function PUT(req, { params }) {
     const thumbnail = formData.get("thumbnail");
     const chaptersJson = formData.get("chapters");
 
-    const pricing = validateCoursePricing({ price, discountPrice, isFree });
-    if (pricing.error) return NextResponse.json({ success: false, message: pricing.error }, { status: 400 });
-    const categoryResult = formData.has("category")
-      ? await resolveCourseCategory(formData.get("category"), course.category)
-      : { category: course.category || null };
-    if (categoryResult.error) return NextResponse.json({ success: false, message: categoryResult.error }, { status: 400 });
-
     // Simple Form Data Validation ===================
     if (!title || title.length < 5) {
       return NextResponse.json(
@@ -244,9 +235,8 @@ export async function PUT(req, { params }) {
     course.slug = updatedSlug;
     course.shortDescription = shortDescription;
     course.fullDescription = fullDescription;
-    course.price = pricing.price;
-    course.discountPrice = pricing.discountPrice;
-    course.category = categoryResult.category;
+    course.price = isFree ? 0 : Number(price);
+    course.discountPrice = discountPrice ? Number(discountPrice) : null;
     course.isFree = isFree;
     course.level = level;
     course.status = status;

@@ -2,13 +2,13 @@
 
 import { NextResponse } from "next/server";
 import Order from "@/models/Order";
-import User from "@/models/User";
-import Course from "@/models/Course";
 import { isAdmin } from "@/utils/auth";
 import mongoose from "mongoose";
 import connectMongo from "@/configs/connectDB";
 export async function GET(req, { params }) {
   try {
+    await connectMongo();
+
     // 1.admin check ==========================
     const auth = isAdmin(req);
     if (!auth.isAdmin) {
@@ -25,13 +25,10 @@ export async function GET(req, { params }) {
       );
     }
 
-    await connectMongo();
-
     const order = await Order.findById(id)
-      .populate({ path: "user", select: "name phone email", model: User })
+      .populate("user", "name phone email")
       .populate({
         path: "items.course",
-        model: Course,
         select: "title slug thumbnail price discount",
       });
 

@@ -5,7 +5,6 @@ import styles from "./AddCourse.module.css";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import CourseCategorySelect from "@/components/shared/admin/CourseCategorySelect";
 
 // CKEditor دینامیک
 const CKEditor = dynamic(() => import("@/components/sections/CKEditor"), {
@@ -21,7 +20,6 @@ export default function AddCourse() {
     fullDescription: "<p>توضیحات کامل دوره را اینجا بنویسید...</p>",
     price: "",
     discountPrice: "",
-    category: "",
     isFree: false,
     level: "beginner",
     status: "draft",
@@ -79,7 +77,6 @@ export default function AddCourse() {
     data.append("fullDescription", formData.fullDescription);
     data.append("price", formData.price || 0);
     data.append("discountPrice", formData.discountPrice || "");
-    data.append("category", formData.category);
     data.append("isFree", formData.isFree);
     data.append("level", formData.level);
     data.append("status", formData.status);
@@ -103,7 +100,6 @@ export default function AddCourse() {
           fullDescription: "<p>توضیحات کامل دوره را اینجا بنویسید...</p>",
           price: "",
           discountPrice: "",
-          category: "",
           isFree: false,
           level: "beginner",
           status: "draft",
@@ -121,7 +117,7 @@ export default function AddCourse() {
         ]);
         
       } else {
-        toast.error(result.message || "خطا در ذخیره دوره");
+        toast.error("خطا در ذخیره دوره");
       }
     } catch (error) {
       toast.error("خطای سرور");
@@ -227,10 +223,6 @@ export default function AddCourse() {
             dir="ltr"
             style={{ textAlign: "left", direction: "ltr" }}
           />
-        </div>
-
-        <div className={styles.field}>
-          <CourseCategorySelect value={formData.category} onChange={(category) => setFormData((previous) => ({ ...previous, category }))} />
         </div>
 
         {/* توضیح کوتاه */}

@@ -4,7 +4,7 @@ import { FaLock, FaDownload } from "react-icons/fa";
 import styles from "./CourseChapter.module.css";
 import { useAuth } from "@/contexts/authContext";
 
-const CourseChapter = ({ course, hasAccess = false }) => {
+const CourseChapter = ({ course }) => {
   const [openChapter, setOpenChapter] = useState(0); // اولین فصل باز باشه
   const {user} = useAuth();
 
@@ -59,7 +59,7 @@ const CourseChapter = ({ course, hasAccess = false }) => {
             {openChapter === chIndex && (
               <div className={styles.lessons}>
                 {chapter.lessons.map((lesson, lesIndex) => {
-                  const canAccess = hasAccess || isCourseFree || hasPurchased || lesson.isFree;
+                  const canAccess = isCourseFree || hasPurchased || lesson.isFree;
 
                   return (
                     <div key={lesIndex} className={styles.lesson}>
