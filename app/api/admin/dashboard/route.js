@@ -6,169 +6,206 @@ import Comment from "@/models/Comment";
 import { isAdmin } from "@/utils/auth";
 import { NextResponse } from "next/server";
 
+const totals = () => ({
+  $group: {
+    _id: null,
+    total: { $sum: "$totalPrice" },
+    count: { $sum: 1 },
+  },
+});
+
 export async function GET(req) {
   try {
+    const auth = isAdmin(req);
+    if (!auth.isAdmin) return auth;
+
     await connectMongo();
 
-    // admin check
-    const auth = isAdmin(req);
-    if (!auth.isAdmin) {
-      return auth;
-    }
-
-    // ========== تعداد کل‌ها ==========
-    const totalUsers = await User.countDocuments({});
-    const totalCourses = await Course.countDocuments({});
-    const totalOrders = await Order.countDocuments({});
-    const totalComments = await Comment.countDocuments({});
-
-    // ========== کامنت‌های بدون پاسخ ==========
-    // کامنت‌هایی که پاسخ ادمین ندارن (parentComment ندارن و reply هم ندارن)
-    const allMainComments = await Comment.find({ parentComment: null }).lean();
-    const allReplies = await Comment.find({
-      parentComment: { $ne: null },
-      isAdminReply: true,
-    }).lean();
-
-    const repliedParentIds = allReplies.map((r) =>
-      r.parentComment.toString()
-    );
-    const unansweredComments = allMainComments.filter(
-      (c) => !repliedParentIds.includes(c._id.toString())
-    ).length;
-
-    // ========== فروش امروز ==========
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
-    const todayEnd = new Date();
-    todayEnd.setHours(23, 59, 59, 999);
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
 
-    const todaySalesResult = await Order.aggregate([
-      {
-        $match: {
-          status: "paid",
-          paidAt: { $gte: todayStart, $lte: todayEnd },
-        },
-      },
-      { $group: { _id: null, total: { $sum: "$totalPrice" }, count: { $sum: 1 } } },
-    ]);
-
-    const todaySales = todaySalesResult[0]?.total || 0;
-    const todayOrdersCount = todaySalesResult[0]?.count || 0;
-
-    // ========== فروش این ماه ==========
-    const thisMonthStart = new Date();
+    const thisMonthStart = new Date(todayStart);
     thisMonthStart.setDate(1);
-    thisMonthStart.setHours(0, 0, 0, 0);
 
-    const thisMonthSalesResult = await Order.aggregate([
-      {
-        $match: {
-          status: "paid",
-          paidAt: { $gte: thisMonthStart, $lte: todayEnd },
-        },
-      },
-      { $group: { _id: null, total: { $sum: "$totalPrice" }, count: { $sum: 1 } } },
-    ]);
+    const lastMonthStart = new Date(thisMonthStart);
+    lastMonthStart.setMonth(lastMonthStart.getMonth() - 1);
 
-    const thisMonthSales = thisMonthSalesResult[0]?.total || 0;
-    const thisMonthOrdersCount = thisMonthSalesResult[0]?.count || 0;
+    const days = Array.from({ length: 7 }, (_, index) => {
+      const start = new Date(todayStart);
+      start.setDate(start.getDate() - (6 - index));
+      return start;
+    });
 
-    // ========== فروش ماه قبل ==========
-    const lastMonthEnd = new Date(thisMonthStart);
-    lastMonthEnd.setMilliseconds(-1);
+    const rangeStart = new Date(
+      Math.min(lastMonthStart.getTime(), days[0].getTime())
+    );
 
-    const lastMonthStart = new Date(lastMonthEnd);
-    lastMonthStart.setDate(1);
-    lastMonthStart.setHours(0, 0, 0, 0);
+    const [
+      totalUsers,
+      totalCourses,
+      totalOrders,
+      totalComments,
+      salesResult,
+      unansweredResult,
+      recentComments,
+      recentOrders,
+    ] = await Promise.all([
+      User.countDocuments({}),
+      Course.countDocuments({}),
+      Order.countDocuments({}),
+      Comment.countDocuments({}),
 
-    const lastMonthSalesResult = await Order.aggregate([
-      {
-        $match: {
-          status: "paid",
-          paidAt: { $gte: lastMonthStart, $lte: lastMonthEnd },
-        },
-      },
-      { $group: { _id: null, total: { $sum: "$totalPrice" }, count: { $sum: 1 } } },
-    ]);
-
-    const lastMonthSales = lastMonthSalesResult[0]?.total || 0;
-    const lastMonthOrdersCount = lastMonthSalesResult[0]?.count || 0;
-
-    // ========== فروش 7 روز اخیر (برای نمودار) ==========
-    const last7Days = [];
-    for (let i = 6; i >= 0; i--) {
-      const dayStart = new Date();
-      dayStart.setDate(dayStart.getDate() - i);
-      dayStart.setHours(0, 0, 0, 0);
-
-      const dayEnd = new Date(dayStart);
-      dayEnd.setHours(23, 59, 59, 999);
-
-      const dayResult = await Order.aggregate([
+      // تمام آمار فروش در یک درخواست
+      Order.aggregate([
         {
           $match: {
             status: "paid",
-            paidAt: { $gte: dayStart, $lte: dayEnd },
+            paidAt: { $gte: rangeStart, $lt: tomorrowStart },
           },
         },
-        { $group: { _id: null, total: { $sum: "$totalPrice" }, count: { $sum: 1 } } },
-      ]);
+        {
+          $facet: {
+            today: [
+              { $match: { paidAt: { $gte: todayStart } } },
+              totals(),
+            ],
+            thisMonth: [
+              { $match: { paidAt: { $gte: thisMonthStart } } },
+              totals(),
+            ],
+            lastMonth: [
+              {
+                $match: {
+                  paidAt: {
+                    $gte: lastMonthStart,
+                    $lt: thisMonthStart,
+                  },
+                },
+              },
+              totals(),
+            ],
+            last7Days: [
+              { $match: { paidAt: { $gte: days[0] } } },
+              {
+                $bucket: {
+                  groupBy: "$paidAt",
+                  boundaries: [...days, tomorrowStart],
+                  output: {
+                    total: { $sum: "$totalPrice" },
+                    count: { $sum: 1 },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      ]),
 
-      last7Days.push({
-        date: dayStart.toLocaleDateString("fa-IR", {
-          month: "short",
-          day: "numeric",
-        }),
-        sales: dayResult[0]?.total || 0,
-        orders: dayResult[0]?.count || 0,
-      });
-    }
+      // شمارش نظرات بدون پاسخ، داخل دیتابیس
+      Comment.aggregate([
+        { $match: { parentComment: null } },
+        {
+          $lookup: {
+            from: Comment.collection.name,
+            let: { commentId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  isAdminReply: true,
+                  $expr: {
+                    $eq: ["$parentComment", "$$commentId"],
+                  },
+                },
+              },
+              { $limit: 1 },
+              { $project: { _id: 1 } },
+            ],
+            as: "adminReplies",
+          },
+        },
+        {
+          $match: {
+            "adminReplies.0": { $exists: false },
+          },
+        },
+        { $count: "count" },
+      ]),
 
-    // ========== آخرین کامنت‌ها ==========
-    const recentComments = await Comment.find({ parentComment: null })
-      .populate("user", "name email")
-      .populate("course", "title slug")
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .lean();
+      Comment.find({ parentComment: null })
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .populate("user", "name email")
+        .populate("course", "title slug")
+        .lean(),
 
-    // ========== آخرین سفارشات ==========
-    const recentOrders = await Order.find()
-      .populate("user", "name email")
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .lean();
+      Order.find()
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .populate("user", "name email")
+        .lean(),
+    ]);
+
+    const sales = salesResult[0] || {};
+
+    const dailySales = new Map(
+      (sales.last7Days || []).map((day) => [
+        new Date(day._id).getTime(),
+        day,
+      ])
+    );
 
     return NextResponse.json(
       {
         success: true,
+        adminId: String(auth.adminId),
         stats: {
           totalUsers,
           totalCourses,
           totalOrders,
           totalComments,
-          unansweredComments,
-          todaySales,
-          todayOrdersCount,
-          thisMonthSales,
-          thisMonthOrdersCount,
-          lastMonthSales,
-          lastMonthOrdersCount,
+          unansweredComments: unansweredResult[0]?.count || 0,
+          todaySales: sales.today?.[0]?.total || 0,
+          todayOrdersCount: sales.today?.[0]?.count || 0,
+          thisMonthSales: sales.thisMonth?.[0]?.total || 0,
+          thisMonthOrdersCount: sales.thisMonth?.[0]?.count || 0,
+          lastMonthSales: sales.lastMonth?.[0]?.total || 0,
+          lastMonthOrdersCount: sales.lastMonth?.[0]?.count || 0,
         },
         charts: {
-          last7Days,
+          last7Days: days.map((start) => {
+            const day = dailySales.get(start.getTime());
+
+            return {
+              date: start.toLocaleDateString("fa-IR", {
+                month: "short",
+                day: "numeric",
+              }),
+              sales: day?.total || 0,
+              orders: day?.count || 0,
+            };
+          }),
         },
         recentComments,
         recentOrders,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": "private, no-store",
+        },
+      }
     );
   } catch (error) {
-    console.log(error);
+    console.error("Dashboard error:", error);
+
     return NextResponse.json(
-      { success: false, message: "Internal Server Error" },
+      {
+        success: false,
+        message: "Internal Server Error",
+      },
       { status: 500 }
     );
   }

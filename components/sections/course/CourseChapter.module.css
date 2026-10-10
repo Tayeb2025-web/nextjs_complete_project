@@ -1,4 +1,5 @@
 .chapters {
+  min-width: 0;
   margin: 4rem 0;
   padding: 2.5rem;
   background: #ffffff;
@@ -56,6 +57,7 @@
 }
 
 .chapterHeader {
+  gap: 12px;
   padding: 1.5rem;
   cursor: pointer;
   display: flex;
@@ -70,6 +72,8 @@
 }
 
 .chapterHeader h3 {
+  min-width: 0;
+  overflow-wrap: anywhere;
   margin: 0;
   font-size: 18px;
   font-weight: 600;
@@ -85,6 +89,7 @@
 }
 
 .arrow {
+  flex-shrink: 0;
   font-size: 1.2rem;
   transition: transform 0.3s;
 }
@@ -292,14 +297,83 @@
   text-align: center;
 }
 
+.lessonInfo,
+.lessonLink,
+.lockedLesson {
+  min-width: 0;
+}
+.lessonTitle {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.8;
+}
+.lessonInfo svg {
+  flex-shrink: 0;
+}
+.lesson {
+  gap: 16px;
+}
+.lessonMeta {
+  flex-shrink: 0;
+}
+.lockMessage {
+  max-width: 40%;
+  overflow-wrap: anywhere;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .lesson {
     flex-direction: column;
     align-items: flex-start;
+    padding: 12px 0;
+    gap: 8px;
   }
 
   .lessonMeta {
     margin-top: 0.5rem;
+  }
+  .chapters {
+    padding: 20px;
+    margin: 36px 0;
+  }
+  .title {
+    font-size: 1.3rem;
+  }
+  .header {
+    margin-bottom: 20px;
+    gap: 8px;
+  }
+  .chapterHeader {
+    padding: 14px;
+  }
+  .chapterHeader h3 {
+    font-size: 1rem;
+  }
+  .lessons {
+    padding: 8px 14px;
+  }
+  .lessonInfo,
+  .lessonLink,
+  .lockedLesson {
+    width: 100%;
+    gap: 10px;
+  }
+  .lessonTitle {
+    font-size: 0.95rem;
+  }
+  .lockMessage {
+    max-width: 100%;
+    text-align: start;
+    font-size: 0.85rem;
+  }
+  .empty {
+    padding: 24px 8px;
+    font-size: 1rem;
+  }
+}
+@media (max-width: 480px) {
+  .chapters {
+    padding: 16px;
   }
 }

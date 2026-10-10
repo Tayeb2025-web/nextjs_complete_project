@@ -1,23 +1,39 @@
 .courseCard {
-  width: 270px;
+  width: 100%;
+  min-width: 0;
   box-shadow: rgba(94, 129, 209, 0.16) 0px 8px 24px;
   border-radius: 10px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
 }
 .courseImg img {
   width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
   border-radius: 10px 10px 20px 20px;
 }
 .courseDetails {
+  min-width: 0;
   padding: 10px 15px;
+  flex: 1;
 }
 .courseTitle h2 {
   font-size: 18px;
-  height: 55px;
+  min-height: 4.8em;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   margin-bottom: 10px;
   cursor: pointer;
 }
 .courseDesc {
+  overflow-wrap: anywhere;
   color: rgb(55 65 81);
   display: -webkit-box;
   line-clamp: 2;
@@ -29,6 +45,8 @@
   margin-bottom: 10px;
 }
 .courseFooter {
+  flex-wrap: wrap;
+  gap: 12px;
   padding: 15px;
   display: flex;
   justify-content: space-between;
@@ -36,17 +54,25 @@
   border-top: 1px solid rgba(128, 128, 128, 0.157);
 }
 .courseStudentCount {
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+  overflow-wrap: anywhere;
   display: flex;
   gap: 7px;
 }
 .coursePrice {
+  min-width: 0;
+  max-width: 100%;
+  margin-inline-start: auto;
+  text-align: end;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .coursePrice span {
   color: rgb(111, 111, 112);
-  margin-right: 5px;
+  overflow-wrap: anywhere;
 }
 .discount {
   background-color: rgb(218 30 40);
@@ -74,8 +100,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position:absolute;
-  top: -10px;
-  left: -10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
   color: white;
+}
+.courseStudentCount svg {
+  flex-shrink: 0;
+}
+.discountPrice {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+@media (max-width: 560px) {
+  .courseTitle h2 {
+    font-size: 17px;
+  }
 }

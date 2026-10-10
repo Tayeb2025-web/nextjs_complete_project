@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "seed:learning": "node --env-file=.env scripts/seed-learning-content.mjs",
+    "test:learning": "node --env-file=.env scripts/test-learning-content.mjs"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",

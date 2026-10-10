@@ -95,13 +95,13 @@ const CourseDetails = async ({ params }) => {
   const totalLessons = course.lessonsCount;
 
   const statusText = course.status === "published" ? "منتشر شده" : course.status === 'coming-soon' ? 'به زودی' : 'پیش نویس'
-  const levelText = course.level === "begginer" ? "مبتدی" : course.level === 'intermediate' ? 'متوسط' : 'پیشرفته'
+  const levelText = course.level === "beginner" ? "مبتدی" : course.level === 'intermediate' ? 'متوسط' : 'پیشرفته'
   
   const plainCourse = JSON.parse(JSON.stringify(course));
   const plainComments = JSON.parse(JSON.stringify(comments));
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       <div className={styles.courseDetailsPage}>
         <CourseIntro
           totalDuration={totalDuration}

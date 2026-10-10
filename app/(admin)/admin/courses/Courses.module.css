@@ -123,6 +123,9 @@
 }
 
 .statusBadge {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
   padding: 0.4rem 0.8rem;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -149,6 +152,28 @@
   gap: 0.8rem;
   flex-wrap: wrap;
   padding-top: 25px;
+}
+
+.courseActionsCell {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.courseActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.8rem;
+}
+
+.courseActions > a,
+.courseActions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 44px;
+  white-space: nowrap;
 }
 
 .editBtn {
@@ -594,5 +619,80 @@
 
   .modalHeader h3 {
     font-size: 1.4rem;
+  }
+}
+
+/* Keep tables and dialogs within the available panel width. */
+.tableContainer {
+  min-width: 0;
+  max-width: 100%;
+  overscroll-behavior-x: contain;
+}
+.table {
+  min-width: 700px;
+}
+.pagination {
+  flex-wrap: wrap;
+}
+.modalOverlay {
+  padding: 1rem;
+}
+.modal {
+  max-height: calc(100dvh - 2rem);
+}
+.modalBody {
+  min-height: 0;
+  min-width: 0;
+}
+.modalHeader {
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+.modalHeader h2,
+.modalHeader h3 {
+  overflow-wrap: anywhere;
+}
+.modalClose {
+  flex-shrink: 0;
+}
+.modalFooter {
+  flex-wrap: wrap;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+  .searchInput,
+  .filterSelect {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  .addButton {
+    text-align: center;
+  }
+  .modal {
+    width: 100%;
+    margin: 0;
+  }
+  .modalHeader,
+  .modalBody,
+  .modalFooter {
+    padding: 1rem;
+  }
+  .modalHeader h2,
+  .modalHeader h3 {
+    font-size: 1.2rem;
+  }
+  .modalFooter > button {
+    flex: 1;
+    padding-inline: 0.75rem;
+  }
+  .empty {
+    padding: 2rem 1rem;
   }
 }

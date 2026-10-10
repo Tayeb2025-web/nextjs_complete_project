@@ -105,6 +105,20 @@ export default function OrderDetailsPage() {
         </div>
       </div>
 
+      {order.couponCode && (
+        <div className={styles.card}>
+          <h2>تخفیف سفارش</h2>
+          <p>
+            کد تخفیف: <span dir="ltr">{order.couponCode}</span>
+          </p>
+          <p>
+            مبلغ قبل از کد: {formatPrice(order.subtotal ?? order.totalPrice)}{" "}
+            تومان
+          </p>
+          <p>تخفیف: {formatPrice(order.discountAmount || 0)} تومان</p>
+        </div>
+      )}
+
       {/* کاربر */}
 
       <div className={styles.card}>

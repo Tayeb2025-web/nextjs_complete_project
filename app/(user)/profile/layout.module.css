@@ -1,17 +1,110 @@
-
 .userLayout {
-    display: flex;
+  --profile-sidebar-width: 300px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  direction: rtl;
 }
-
-.sidebarContainer{
-    width: 300px;
-    height: 100vh;
-    position: fixed;
-    background-color: gold;
+.sidebarContainer {
+  width: var(--profile-sidebar-width);
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: 50;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #222831;
 }
-
 .contentContainer {
-    margin-right: 300px;
-    flex: 1;
-    padding: 20px;
+  margin-inline-start: var(--profile-sidebar-width);
+  min-width: 0;
+  padding: 20px;
+}
+.contentContainer > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.mobileHeader,
+.backdrop {
+  display: none;
+}
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .userLayout {
+    --profile-sidebar-width: 260px;
+  }
+}
+@media (max-width: 1024px) {
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    min-height: 64px;
+    padding: 10px 16px;
+    background: #222831;
+    color: #fff;
+  }
+  .mobileBrand {
+    margin-inline-start: auto;
+    color: #ebd5ab;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .menuButton {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border: 1px solid #56606d;
+    border-radius: 8px;
+    background: #393e46;
+    color: #ebd5ab;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .mobileHeader a:focus-visible,
+  .menuButton:focus-visible {
+    outline: 2px solid #ebd5ab;
+    outline-offset: 3px;
+  }
+  .sidebarContainer {
+    width: min(300px, calc(100% - 48px));
+    z-index: 60;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition:
+      transform 0.2s ease,
+      visibility 0.2s;
+  }
+  .sidebarOpen {
+    transform: translateX(0);
+    visibility: visible;
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.25);
+  }
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 55;
+    border: 0;
+    background: rgba(15, 23, 42, 0.55);
+    cursor: pointer;
+  }
+  .contentContainer {
+    margin-inline-start: 0;
+    padding: 16px;
+  }
+}
+@media (max-width: 480px) {
+  .contentContainer {
+    padding: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebarContainer {
+    transition: none;
+  }
 }

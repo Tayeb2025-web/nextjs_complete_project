@@ -6,9 +6,8 @@ import jwt from 'jsonwebtoken'
 
 export async function GET() {
   try {
-    await connectMongo();
     const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken").value;
+    const accessToken = cookieStore.get("accessToken")?.value;
 
     if (!accessToken) {
       return NextResponse.json(
@@ -27,6 +26,8 @@ export async function GET() {
         { status: 401 },
       );
     }
+
+    await connectMongo();
 
     const user = await User.findById(payload.userId)
       .select("name phone email role createdAt purchasedCourses")

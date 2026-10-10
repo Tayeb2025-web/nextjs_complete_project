@@ -139,7 +139,7 @@ export default function AuthPage() {
       <div className={styles.authForm}>
         {!isCodeSent && (
           <>
-            <h2>سید طیب پویا</h2>
+            <h2>سورن کد</h2>
             <h3>ورود | ثبت نام</h3>
             <p>لطفا ایمیل خود را وارد کنید</p>
             <input
@@ -162,7 +162,7 @@ export default function AuthPage() {
         )}
         {isCodeSent && (
           <>
-            <h2>سید طیب پویا</h2>
+            <h2>سورن کد</h2>
             <div className={styles.gotoBack} onClick={handleBackToEmail}>
               <IoMdArrowRoundBack size={"20px"} />
             </div>

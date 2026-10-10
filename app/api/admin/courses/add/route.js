@@ -3,6 +3,8 @@ import Course from "@/models/Course";
 import { isAdmin } from "@/utils/auth";
 import { NextResponse } from "next/server";
 import { put } from "@vercel/blob";
+import { resolveCourseCategory } from "@/utils/courseCategory";
+import { validateCoursePricing } from "@/utils/coursePrice";
 
 export async function POST(req) {
   try {
@@ -28,6 +30,11 @@ export async function POST(req) {
     const slug = formData.get("slug");
     const thumbnail = formData.get("thumbnail");
     const chaptersJson = formData.get("chapters");
+
+    const pricing = validateCoursePricing({ price, discountPrice, isFree });
+    if (pricing.error) return NextResponse.json({ success: false, message: pricing.error }, { status: 400 });
+    const categoryResult = await resolveCourseCategory(formData.get("category"));
+    if (categoryResult.error) return NextResponse.json({ success: false, message: categoryResult.error }, { status: 400 });
 
     // from data validation
     if (!title || title.length < 5) {
@@ -143,8 +150,9 @@ export async function POST(req) {
       slug,
       shortDescription,
       fullDescription,
-      price: isFree ? 0 : Number(price),
-      discountPrice: discountPrice ? Number(discountPrice) : null,
+      price: pricing.price,
+      discountPrice: pricing.discountPrice,
+      category: categoryResult.category,
       isFree,
       level,
       status,

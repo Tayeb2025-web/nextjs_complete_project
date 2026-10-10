@@ -3,34 +3,217 @@
 import { useEffect, useState } from "react";
 import styles from "./Dashboard.module.css";
 import Link from "next/link";
-import { FaUsers, FaShoppingCart, FaComments, FaChartLine } from "react-icons/fa";
+import {
+  FaUsers,
+  FaShoppingCart,
+  FaComments,
+  FaChartLine,
+} from "react-icons/fa";
 import { SiCoursera } from "react-icons/si";
 import { MdToday, MdCalendarMonth, MdQuestionAnswer } from "react-icons/md";
 import { IoMdTime } from "react-icons/io";
+import { useAuth } from "@/contexts/authContext";
+
+const DASHBOARD_CACHE_MS = 30_000;
+
+let dashboardCache = null;
+let dashboardRequest = null;
+let cacheVersion = 0;
+
+function clearDashboardCache() {
+  cacheVersion += 1;
+  dashboardCache = null;
+  dashboardRequest = null;
+}
+
+function getCachedDashboard(adminId) {
+  if (
+    !adminId ||
+    dashboardCache?.adminId !== adminId ||
+    Date.now() - dashboardCache.updatedAt >= DASHBOARD_CACHE_MS
+  ) {
+    return null;
+  }
+
+  return dashboardCache.data;
+}
+
+function requireDashboardOwner(result, adminId) {
+  if (adminId && result.adminId !== adminId) {
+    const error = new Error("اطلاعات حساب تغییر کرده است. صفحه را تازه کنید.");
+    error.status = 403;
+    throw error;
+  }
+  return result;
+}
+
+function requestDashboard(adminId) {
+  // جلوگیری از درخواست تکراریِ هم‌زمان
+  if (dashboardRequest?.adminId === adminId) {
+    return dashboardRequest.promise;
+  }
+
+  if (dashboardRequest && dashboardRequest.adminId === null) {
+    return dashboardRequest.promise.then((result) =>
+      requireDashboardOwner(result, adminId)
+    );
+  }
+
+  const version = cacheVersion;
+  const request = { adminId, promise: null };
+
+  request.promise = (async () => {
+    try {
+      const res = await fetch("/api/admin/dashboard", {
+        credentials: "include",
+        cache: "no-store",
+      });
+
+      if (!res.ok) {
+        const message =
+          res.status === 401
+            ? "برای مشاهده داشبورد دوباره وارد حساب شوید."
+            : res.status === 403
+              ? "این حساب اجازه دسترسی به داشبورد مدیریت را ندارد."
+              : "خطا در دریافت اطلاعات داشبورد. دوباره تلاش کنید.";
+        const error = new Error(message);
+        error.status = res.status;
+        throw error;
+      }
+
+      const result = await res.json();
+
+      if (
+        !result.success ||
+        typeof result.adminId !== "string" ||
+        result.adminId === "undefined" ||
+        !result.stats ||
+        !Array.isArray(result.charts?.last7Days) ||
+        !Array.isArray(result.recentComments) ||
+        !Array.isArray(result.recentOrders)
+      ) {
+        throw new Error("پاسخ دریافتی داشبورد معتبر نیست. دوباره تلاش کنید.");
+      }
+
+      requireDashboardOwner(result, adminId);
+
+      if (cacheVersion === version) {
+        dashboardCache = {
+          adminId: result.adminId,
+          data: result,
+          updatedAt: Date.now(),
+        };
+      }
+
+      return result;
+    } catch (error) {
+      if (
+        cacheVersion === version &&
+        (error.status === 401 || error.status === 403)
+      ) {
+        clearDashboardCache();
+      }
+
+      throw error;
+    } finally {
+      if (dashboardRequest === request) {
+        dashboardRequest = null;
+      }
+    }
+  })();
+
+  dashboardRequest = request;
+  return request.promise;
+}
 
 export default function Dashboard() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+
+  const userId = user?._id ?? user?.id;
+
+  const adminId = user?.role === "admin" && userId ? String(userId) : null;
+  const [retryCount, setRetryCount] = useState(0);
+
+  const [state, setState] = useState(() => {
+    const cached = getCachedDashboard(adminId);
+
+    return {
+      adminId,
+      data: cached,
+      loading: !cached,
+      error: null,
+    };
+  });
 
   useEffect(() => {
-    const fetchDashboard = async () => {
-      try {
-        const res = await fetch("/api/admin/dashboard");
-        if (!res.ok) throw new Error();
+    if (user && user.role !== "admin") {
+      clearDashboardCache();
+      setState({
+        adminId,
+        data: null,
+        loading: false,
+        error: {
+          status: 403,
+          message: "این حساب اجازه دسترسی به داشبورد مدیریت را ندارد.",
+        },
+      });
+      return;
+    }
 
-        const result = await res.json();
-        if (result.success) {
-          setData(result);
+    let active = true;
+    const cached = getCachedDashboard(adminId);
+
+    setState({
+      adminId,
+      data: cached,
+      loading: !cached,
+      error: null,
+    });
+
+    // با وجود کش هم، اطلاعات در پس‌زمینه تازه می‌شود
+    requestDashboard(adminId)
+      .then((result) => {
+        if (active) {
+          setState({
+            adminId,
+            data: result,
+            loading: false,
+            error: null,
+          });
         }
-      } catch (err) {
-        console.error("Error fetching dashboard:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      })
+      .catch((error) => {
+        if (!active) return;
 
-    fetchDashboard();
-  }, []);
+        console.error("Error fetching dashboard:", error);
+
+        const denied = error.status === 401 || error.status === 403;
+        if (denied) clearDashboardCache();
+
+        setState({
+          adminId,
+          data: denied ? null : cached,
+          loading: false,
+          error: {
+            status: error.status,
+            message:
+              error.name === "TypeError"
+                ? "ارتباط با سرور برقرار نشد. دوباره تلاش کنید."
+                : error.message,
+          },
+        });
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [adminId, user?.role, retryCount]);
+
+  const current = state.adminId === adminId ? state : null;
+  const data = current?.data || null;
+
+  const loading = current?.loading ?? true;
+  const error = current?.error;
 
   const formatPrice = (price) => {
     return Number(price).toLocaleString("fa-IR");
@@ -82,7 +265,26 @@ export default function Dashboard() {
   if (!data) {
     return (
       <div className={styles.container}>
-        <p>خطا در بارگذاری داشبورد</p>
+        <div className={styles.header}>
+          <div className={styles.headerRight}>
+            <h1>داشبورد مدیریت</h1>
+            <p role="alert">{error?.message || "خطا در بارگذاری داشبورد"}</p>
+          </div>
+          <div className={styles.headerLeft}>
+            <button
+              type="button"
+              className={styles.headerBtn}
+              onClick={() => setRetryCount((count) => count + 1)}
+            >
+              تلاش دوباره
+            </button>
+            {error?.status === 401 && (
+              <Link href="/auth" className={styles.headerBtn}>
+                ورود دوباره
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
@@ -347,9 +549,7 @@ export default function Dashboard() {
                     {formatPrice(order.totalPrice)} تومان
                   </span>
                   <span
-                    className={`${styles.orderStatus} ${
-                      styles[order.status]
-                    }`}
+                    className={`${styles.orderStatus} ${styles[order.status]}`}
                   >
                     {statusMap[order.status] || order.status}
                   </span>
